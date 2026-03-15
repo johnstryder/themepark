@@ -1,0 +1,25 @@
+[package]
+name = "app"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+leptos = { workspace = true }
+leptos_meta = { workspace = true }
+leptos_router = { workspace = true }
+leptos_axum = { workspace = true, optional = true }
+
+http = { workspace = true }
+cfg-if = { workspace = true }
+thiserror = { workspace = true }
+serde = { version = "1", features = ["derive"] }
+
+# Optional: Bevy integration (frontend/WASM only)
+bevy = { workspace = true, optional = true, features = ["bevy_pbr", "bevy_window", "bevy_winit", "webgl2", "web"] }
+leptos-bevy-canvas = { workspace = true, optional = true }
+
+[features]
+default = []
+hydrate = ["leptos/hydrate", "bevy-game"]
+ssr = ["leptos/ssr", "leptos_meta/ssr", "leptos_router/ssr", "dep:leptos_axum"]
+bevy-game = ["dep:bevy", "dep:leptos-bevy-canvas"]

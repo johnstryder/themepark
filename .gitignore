@@ -1,0 +1,15 @@
+/target/
+**/*.rs.bk
+.env
+.env.*
+*.pdb
+Cargo.lock
+
+# Leptos build output
+/site/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
