@@ -1,0 +1,15 @@
+[Unit]
+Description=Themepark Axum/Leptos Server
+After=network.target
+
+[Service]
+Type=simple
+User=john
+WorkingDirectory=/home/john/themepark
+ExecStart=/home/john/themepark/target/release/server
+Restart=on-failure
+RestartSec=5
+Environment="RUST_LOG=info"
+
+[Install]
+WantedBy=multi-user.target

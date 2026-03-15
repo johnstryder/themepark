@@ -62,6 +62,12 @@ body {
     overflow: hidden;
     border: 1px solid #30363d;
     min-height: 400px;
+
+    canvas {
+      width: 800px;
+      height: 600px;
+      display: block;
+    }
   }
 
   .bevy-placeholder {

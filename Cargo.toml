@@ -37,8 +37,8 @@ surrealdb = { version = "2", features = ["kv-mem"] }
 bevy = { version = "0.18", default-features = false }
 leptos-bevy-canvas = "0.5"
 
-[workspace.metadata.leptos]
-name = "tezzembals"
+[[workspace.metadata.leptos]]
+name = "themepark"
 bin-package = "server"
 lib-package = "frontend"
 site-root = "target/site"
@@ -48,7 +48,5 @@ assets-dir = "public"
 site-addr = "127.0.0.1:3000"
 reload-port = 3001
 browserquery = "defaults"
-watch = false
-env = "PROD"
 bin-features = ["ssr"]
 lib-features = ["hydrate"]

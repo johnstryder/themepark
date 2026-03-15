@@ -17,7 +17,7 @@ async fn main() {
     // SurrealDB: in-memory for template (use Ws for remote in production)
     let db: Surreal<surrealdb::engine::local::Db> =
         Surreal::new::<Mem>(()).await.expect("Failed to create SurrealDB");
-    db.use_ns("tezzembals")
+    db.use_ns("themepark")
         .use_db("main")
         .await
         .expect("Failed to init SurrealDB namespace");

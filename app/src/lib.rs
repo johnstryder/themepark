@@ -9,9 +9,9 @@ pub fn shell(_options: LeptosOptions) -> impl IntoView {
             <head>
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-                <Title text="Tezzembals - BALS Stack"/>
-                <Stylesheet id="leptos" href="/pkg/tezzembals.css"/>
-                <meta name="description" content="BALS Stack: Bevy, Axum, Leptos, SurrealDB"/>
+                <Title text="Themepark - BALS Stack"/>
+                <Stylesheet id="leptos" href="/pkg/themepark.css"/>
+                <meta name="description" content="Themepark - BALS Stack: Bevy, Axum, Leptos, SurrealDB"/>
             </head>
             <body>
                 <Router>
@@ -27,10 +27,10 @@ pub fn App() -> impl IntoView {
     provide_meta_context();
 
     view! {
-        <Title text="Tezzembals"/>
+        <Title text="Themepark"/>
         <main class="app-container">
             <header class="app-header">
-                <h1>"Tezzembals"</h1>
+                <h1>"Themepark"</h1>
                 <p class="stack-badge">"BALS Stack: Bevy · Axum · Leptos · SurrealDB"</p>
             </header>
 
@@ -56,11 +56,7 @@ fn GameView() -> impl IntoView {
     use leptos_bevy_canvas::prelude::*;
 
     view! {
-        <BevyCanvas
-            init=init_bevy_game
-            width="800"
-            height="600"
-        />
+        <BevyCanvas init=init_bevy_game />
     }
 }
 
