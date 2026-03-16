@@ -4,9 +4,9 @@ After=network.target
 
 [Service]
 Type=simple
-User=john
-WorkingDirectory=/home/john/themepark
-ExecStart=/home/john/themepark/target/release/server
+User=jhs
+WorkingDirectory=/home/jhs/themepark
+ExecStart=/home/jhs/themepark/target/release/server
 Restart=on-failure
 RestartSec=5
 Environment="RUST_LOG=info"

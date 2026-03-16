@@ -22,10 +22,12 @@ async fn main() {
         .await
         .expect("Failed to init SurrealDB namespace");
 
-    let routes = generate_route_list(|| shell(leptos_options.clone()));
+    let shell_for_routes = leptos_options.clone();
+    let routes = generate_route_list(move || shell(shell_for_routes.clone()));
 
+    let shell_for_app = leptos_options.clone();
     let app = Router::new()
-        .leptos_routes(&leptos_options, routes, move || shell(leptos_options.clone()))
+        .leptos_routes(&leptos_options, routes, move || shell(shell_for_app.clone()))
         .fallback(leptos_axum::file_and_error_handler(shell))
         .with_state(leptos_options);
 

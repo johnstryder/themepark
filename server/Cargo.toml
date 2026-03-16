@@ -1,11 +1,15 @@
 [package]
 name = "server"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 
 [[bin]]
 name = "server"
 path = "src/main.rs"
+
+[features]
+default = []
+ssr = []  # Used by cargo-leptos; app already has ssr via dependency
 
 [dependencies]
 app = { path = "../app", default-features = false, features = ["ssr"] }
