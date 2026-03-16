@@ -1,6 +1,6 @@
 [package]
 name = "app"
-version = "0.1.9"
+version = "0.1.10"
 edition = "2021"
 
 [dependencies]
@@ -17,9 +17,10 @@ serde = { version = "1", features = ["derive"] }
 # Optional: Bevy integration (frontend/WASM only)
 bevy = { workspace = true, optional = true, features = ["bevy_pbr", "bevy_window", "bevy_winit", "webgl2", "web"] }
 leptos-bevy-canvas = { workspace = true, optional = true }
+bevy_panorbit_camera = { workspace = true, optional = true }
 
 [features]
 default = []
 hydrate = ["leptos/hydrate", "bevy-game"]
 ssr = ["leptos/ssr", "leptos_meta/ssr", "leptos_router/ssr", "dep:leptos_axum"]
-bevy-game = ["dep:bevy", "dep:leptos-bevy-canvas"]
+bevy-game = ["dep:bevy", "dep:leptos-bevy-canvas", "dep:bevy_panorbit_camera"]

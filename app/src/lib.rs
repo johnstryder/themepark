@@ -68,6 +68,7 @@ fn GameView() -> impl IntoView {
 #[cfg(feature = "bevy-game")]
 fn init_bevy_game() -> bevy::prelude::App {
     use bevy::prelude::*;
+    use bevy_panorbit_camera::PanOrbitCameraPlugin;
     leptos::logging::log!("Bevy init_bevy_game called");
 
     let mut app = App::new();
@@ -83,6 +84,7 @@ fn init_bevy_game() -> bevy::prelude::App {
                 ..default()
             })
     )
+    .add_plugins(PanOrbitCameraPlugin)
     .add_systems(Startup, setup_scene);
 
     app
@@ -95,6 +97,7 @@ fn setup_scene(
     mut materials: bevy::prelude::ResMut<bevy::prelude::Assets<bevy::prelude::StandardMaterial>>,
 ) {
     use bevy::prelude::*;
+    use bevy_panorbit_camera::PanOrbitCamera;
 
     // Sky-blue background so we can tell if Bevy is rendering
     commands.insert_resource(ClearColor(Color::srgb(0.53, 0.81, 0.92)));
@@ -133,7 +136,8 @@ fn setup_scene(
 
     commands.spawn((
         Camera3d::default(),
-        Transform::from_xyz(3.0, 3.0, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
+        Transform::from_translation(Vec3::new(3.0, 3.0, 5.0)),
+        PanOrbitCamera::default(),
     ));
 }
 

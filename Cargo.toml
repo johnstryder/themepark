@@ -36,6 +36,7 @@ surrealdb = { version = "2", features = ["kv-mem"] }
 # Bevy (frontend/WASM only)
 bevy = { version = "0.18", default-features = false }
 leptos-bevy-canvas = "0.5"
+bevy_panorbit_camera = "0.34"
 
 [[workspace.metadata.leptos]]
 name = "themepark"
