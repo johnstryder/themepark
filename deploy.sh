@@ -1,30 +1,41 @@
 #!/bin/bash
 # Deploy themepark to production at mywebsitesareathemepark.com
+# Runs without sudo: uses systemd user services instead of system services
 set -e
 
 cd "$(dirname "$0")"
+PROJECT_ROOT="$(pwd)"
 
 echo "==> Building Leptos project..."
 cargo leptos build --release
 
-echo "==> Deploying (requires sudo)..."
-if sudo -n true 2>/dev/null; then
-    sudo mkdir -p /var/www/themepark
-    sudo cp -r target/site/* /var/www/themepark/
-    sudo chown -R www-data:www-data /var/www/themepark 2>/dev/null || sudo chown -R $(whoami):$(whoami) /var/www/themepark
-    sudo rm -f /etc/nginx/conf.d/themepark.conf 2>/dev/null || true
-    sudo ln -sf "$(pwd)/nginx/nginx.conf" /etc/nginx/sites-enabled/themepark.conf
-    sudo cp themepark.service /etc/systemd/system/ 2>/dev/null || true
-    sudo systemctl daemon-reload 2>/dev/null || true
-    sudo nginx -t && sudo systemctl reload nginx
-    sudo systemctl enable themepark 2>/dev/null || true
-    sudo systemctl restart themepark 2>/dev/null || true
-    echo ""
-    echo "Done! Site should be live at http://mywebsitesareathemepark.com"
-else
-    echo ""
-    echo "Build complete. To finish deployment (requires sudo), run:"
-    echo "  sudo ./deploy-install.sh"
-    echo ""
-    echo "Or start the server manually: ./target/release/server"
-fi
+echo "==> Installing themepark user systemd service..."
+mkdir -p ~/.config/systemd/user
+cat > ~/.config/systemd/user/themepark.service << EOF
+[Unit]
+Description=Themepark Axum/Leptos Server
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=$PROJECT_ROOT
+ExecStart=$PROJECT_ROOT/target/release/server
+Restart=on-failure
+RestartSec=5
+Environment="RUST_LOG=info"
+
+[Install]
+WantedBy=default.target
+EOF
+
+systemctl --user daemon-reload
+loginctl enable-linger "$USER" 2>/dev/null || true  # allow user services at boot
+systemctl --user enable themepark 2>/dev/null || true
+systemctl --user restart themepark
+
+echo ""
+echo "Done! Site should be live at http://mywebsitesareathemepark.com"
+echo ""
+echo "Note: Nginx serves static files from target/site. If you get 403 on /pkg/,"
+echo "ensure nginx can read the project: chmod o+x /home/$USER /home/$USER/themepark"
+echo "Fresh setup: run once with sudo: sudo ./deploy-install.sh"

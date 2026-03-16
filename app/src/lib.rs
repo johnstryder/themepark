@@ -9,8 +9,9 @@ pub fn shell(_options: LeptosOptions) -> impl IntoView {
             <head>
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
                 <Title text="Themepark - BALS Stack"/>
-                <Stylesheet id="leptos" href="/pkg/themepark.css"/>
+                <Stylesheet id="leptos" href=format!("/pkg/themepark.css?v={}", env!("CARGO_PKG_VERSION"))/>
                 <meta name="description" content="Themepark - BALS Stack: Bevy, Axum, Leptos, SurrealDB"/>
             </head>
             <body>
@@ -56,7 +57,7 @@ fn GameView() -> impl IntoView {
     use leptos_bevy_canvas::prelude::*;
 
     view! {
-        <BevyCanvas init=init_bevy_game />
+        <BevyCanvas init=init_bevy_game canvas_id="bevy_canvas" />
     }
 }
 
@@ -70,6 +71,8 @@ fn init_bevy_game() -> bevy::prelude::App {
             .set(WindowPlugin {
                 primary_window: Some(Window {
                     canvas: Some("#bevy_canvas".into()),
+                    resolution: (800, 600).into(),
+                    fit_canvas_to_parent: true,
                     ..default()
                 }),
                 ..default()
@@ -104,12 +107,20 @@ fn setup_scene(
         Transform::from_xyz(0.0, 0.5, 0.0),
     ));
 
+    // Multiple lights for better visibility
     commands.spawn((
         PointLight {
-            intensity: 3_000_000.0,
+            intensity: 5_000_000.0,
             ..default()
         },
         Transform::from_xyz(4.0, 8.0, 4.0),
+    ));
+    commands.spawn((
+        PointLight {
+            intensity: 2_000_000.0,
+            ..default()
+        },
+        Transform::from_xyz(-3.0, 5.0, 3.0),
     ));
 
     commands.spawn((
@@ -118,14 +129,12 @@ fn setup_scene(
     ));
 }
 
-/// Placeholder when Bevy is not compiled (SSR)
+/// Placeholder when Bevy is not compiled (SSR) - must match BevyCanvas output exactly for hydration
 #[cfg(not(feature = "bevy-game"))]
 #[component]
 fn GameView() -> impl IntoView {
     view! {
-        <div class="bevy-placeholder">
-            <p>"3D canvas loads on client (Bevy + leptos-bevy-canvas)"</p>
-        </div>
+        <canvas id="bevy_canvas"></canvas>
     }
 }
 
