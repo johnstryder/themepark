@@ -2,7 +2,7 @@ use leptos::prelude::*;
 use leptos_meta::{provide_meta_context, Stylesheet, Title};
 use leptos_router::components::Router;
 
-pub fn shell(_options: LeptosOptions) -> impl IntoView {
+pub fn shell(options: LeptosOptions) -> impl IntoView {
     view! {
         <!DOCTYPE html>
         <html lang="en">
@@ -13,6 +13,7 @@ pub fn shell(_options: LeptosOptions) -> impl IntoView {
                 <Title text="Themepark - BALS Stack"/>
                 <Stylesheet id="leptos" href=format!("/pkg/themepark.css?v={}", env!("CARGO_PKG_VERSION"))/>
                 <meta name="description" content="Themepark - BALS Stack: Bevy, Axum, Leptos, SurrealDB"/>
+                <HydrationScripts options=options/>
             </head>
             <body>
                 <Router>
@@ -57,13 +58,17 @@ fn GameView() -> impl IntoView {
     use leptos_bevy_canvas::prelude::*;
 
     view! {
-        <BevyCanvas init=init_bevy_game canvas_id="bevy_canvas" />
+        <div class="bevy-container">
+            <BevyCanvas init=init_bevy_game canvas_id="bevy_canvas" />
+            <p class="bevy-hint">"3D view — check console (F12) if blank"</p>
+        </div>
     }
 }
 
 #[cfg(feature = "bevy-game")]
 fn init_bevy_game() -> bevy::prelude::App {
     use bevy::prelude::*;
+    leptos::logging::log!("Bevy init_bevy_game called");
 
     let mut app = App::new();
     app.add_plugins(
@@ -90,6 +95,9 @@ fn setup_scene(
     mut materials: bevy::prelude::ResMut<bevy::prelude::Assets<bevy::prelude::StandardMaterial>>,
 ) {
     use bevy::prelude::*;
+
+    // Sky-blue background so we can tell if Bevy is rendering
+    commands.insert_resource(ClearColor(Color::srgb(0.53, 0.81, 0.92)));
 
     let plane_mesh = meshes.add(Plane3d::default().mesh().size(5.0, 5.0));
     let plane_material = materials.add(Color::srgb(0.3, 0.5, 0.3));
@@ -129,12 +137,15 @@ fn setup_scene(
     ));
 }
 
-/// Placeholder when Bevy is not compiled (SSR) - must match BevyCanvas output exactly for hydration
+/// Placeholder when Bevy is not compiled (SSR) - must match BevyCanvas output for hydration
 #[cfg(not(feature = "bevy-game"))]
 #[component]
 fn GameView() -> impl IntoView {
     view! {
-        <canvas id="bevy_canvas"></canvas>
+        <div class="bevy-container">
+            <canvas id="bevy_canvas"></canvas>
+            <p class="bevy-hint">"3D view — check console (F12) if blank"</p>
+        </div>
     }
 }
 
