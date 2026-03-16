@@ -12,8 +12,8 @@ if sudo -n true 2>/dev/null; then
     sudo mkdir -p /var/www/themepark
     sudo cp -r target/site/* /var/www/themepark/
     sudo chown -R www-data:www-data /var/www/themepark 2>/dev/null || sudo chown -R $(whoami):$(whoami) /var/www/themepark
-    sudo cp nginx/nginx.conf /etc/nginx/conf.d/themepark.conf
-    sudo rm -f /etc/nginx/sites-enabled/themepark 2>/dev/null || true
+    sudo rm -f /etc/nginx/conf.d/themepark.conf 2>/dev/null || true
+    sudo ln -sf "$(pwd)/nginx/nginx.conf" /etc/nginx/sites-enabled/themepark.conf
     sudo cp themepark.service /etc/systemd/system/ 2>/dev/null || true
     sudo systemctl daemon-reload 2>/dev/null || true
     sudo nginx -t && sudo systemctl reload nginx
